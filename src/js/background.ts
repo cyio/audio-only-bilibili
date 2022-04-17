@@ -1,6 +1,3 @@
-let count = 0
-let sent = false
-
 class Background {
   private tabIds = new Map();
 
@@ -49,10 +46,18 @@ class Background {
       );
     });
 
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       switch (request.type) {
         case 'video-change':
-          onVideoChange()
+          // onVideoChange()
+          break;
+        case 'disable-extension':
+          this.saveSettings(true);
+          this.disableExtension()
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            const { id, url } = tabs[0] || {}
+            id && chrome.tabs.update(id, {url});
+          });
           break;
       }
     });
@@ -62,14 +67,8 @@ class Background {
   processRequest = (details: any) => {
     const { url, tabId } = details;
     // console.log(0, url)
-    if (url.includes('bilivideo.com/upgcxcode')) {
-      count++
-      // console.log(1, url)
-      // 第一个请求是视频，第二个请求是音频，取第二个
-      if (count !== 2) {
-        return
-      }
-    } else {
+    // path: 30016.m4s 视频，30280.m4s 音频
+    if (!(url.includes('bilivideo.com/upgcxcode') && url.includes('30280.m4s'))) {
       return
     }
     // console.log(2, url)
@@ -82,7 +81,6 @@ class Background {
 
   sendMessage = (tabId: number) => {
     if (this.tabIds.has(tabId)) {
-      sent = true
       chrome.tabs.sendMessage(tabId, {
         url: this.tabIds.get(tabId),
       });
@@ -119,11 +117,6 @@ class Background {
   saveSettings = (disabled: boolean) => {
     chrome.storage.local.set({ audio_only_bilibili_disabled: disabled }); // eslint-disable-line
   };
-}
-
-function onVideoChange() {
-  count = 0
-  sent = false
 }
 
 const background = new Background();

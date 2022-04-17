@@ -7,10 +7,11 @@
   transform: translateX(-50%);
   top: 20px;
   font-size: 18px;
-  pointer-events: none;
+  /* pointer-events: none; */
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
+  z-index: 999;
 }
 
 #movie_player:active .audio_only_div {

@@ -30,24 +30,28 @@ function showAudioOnlyInformation(videoElement: HTMLVideoElement) {
   if (el && el.parentNode) {
     el.parentNode.removeChild(el)
   }
-  if (1) {
-    const extensionAlert = document.createElement('div');
-    extensionAlert.className = 'audio_only_div';
+  const extensionAlert = document.createElement('div');
+  extensionAlert.className = 'audio_only_div';
 
-    const alertText = document.createElement('p');
-    alertText.className = 'alert_text';
-    alertText.innerHTML =
-      '音频模式<br>' +
-      '<div class="small">点击扩展图标切换模式</div>';
+  const alertText = document.createElement('p');
+  alertText.className = 'alert_text';
+  alertText.innerHTML =
+    '音频模式<br>' +
+    '<div class="small">点击扩展图标切换模式</div>';
 
-    extensionAlert.appendChild(alertText);
-    const videoParent = videoElement.parentNode;
-    if (!videoParent) return;
+  extensionAlert.appendChild(alertText);
+  const videoParent = videoElement.parentNode;
+  if (!videoParent) return;
 
-    const parent = videoParent.parentNode;
-    if (parent) {
-      parent.appendChild(extensionAlert);
-    }
+  const parent = videoParent.parentNode;
+  if (parent) {
+    parent.appendChild(extensionAlert);
+    setTimeout(() => {
+      const el = document.querySelector('.alert_text')
+      el && el.addEventListener('click', () => {
+        chrome.runtime.sendMessage({type: "disable-extension"})
+      }, true)
+    }, 0);
   }
 }
 
@@ -125,9 +129,9 @@ chrome.runtime.onMessage.addListener((request) => {
   handleUrl(url)
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  watchVideoChange();
-})
+// document.addEventListener('DOMContentLoaded', () => {
+//   watchVideoChange();
+// })
 
 // 视频播放切换是单页刷新，不能通过 pushState 监听到，这里改用 MutationObserver 观察视频标题
 function watchVideoChange() {
