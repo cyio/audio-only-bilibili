@@ -2,11 +2,15 @@
   z-index: 10;
   color: #FFF;
   cursor: pointer;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 20px;
   font-size: 18px;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
-  text-shadow: #00000080 0 0 2px;
   pointer-events: none;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 #movie_player:active .audio_only_div {
@@ -17,4 +21,11 @@
   position: relative;
   top: 10%;
   text-align: center;
+  white-space: break-spaces;
+}
+
+.small {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #eee;
 }

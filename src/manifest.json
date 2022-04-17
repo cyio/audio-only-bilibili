@@ -5,9 +5,6 @@
   "description": "$DESCRIPTION",
   "offline_enabled": true,
   "icons": {
-    "19": "img/icon19.png",
-    "38": "img/icon38.png",
-    "48": "img/icon48.png",
     "128": "img/icon128.png"
   },
   "background": {
@@ -17,16 +14,15 @@
     "tabs",
     "webRequest",
     "storage",
-    "*://www.youtube.com/*",
-    "*://music.youtube.com/*",
-    "*://*.googlevideo.com/*"
+    "*://www.bilibili.com/*",
+    "*://*.bilivideo.com/*"
   ],
   "browser_action": {
-    "default_title": "Audio Only Youtube"
+    "default_title": "Audio Only bilibili"
   },
   "content_scripts": [
     {
-      "matches": ["*://www.youtube.com/*", "*://music.youtube.com/*"],
+      "matches": ["*://www.bilibili.com/*"],
       "js": ["js/content-script.js"],
       "css": ["css/content-script.css"],
       "run_at": "document_start",

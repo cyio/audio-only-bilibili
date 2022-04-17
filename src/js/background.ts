@@ -1,11 +1,14 @@
+let count = 0
+let sent = false
+
 class Background {
   private tabIds = new Map();
 
   constructor() {
     this.tabIds = new Map();
 
-    chrome.storage.local.get('audio_only_youtube_disabled', (values) => {
-      let disabled = values.audio_only_youtube_disabled;
+    chrome.storage.local.get('audio_only_bilibili_disabled', (values) => {
+      let disabled = values.audio_only_bilibili_disabled;
       if (typeof disabled === 'undefined') {
         disabled = false;
         this.saveSettings(disabled);
@@ -19,8 +22,8 @@ class Background {
     });
 
     chrome.browserAction.onClicked.addListener(() => {
-      chrome.storage.local.get('audio_only_youtube_disabled', (values) => {
-        let disabled = values.audio_only_youtube_disabled;
+      chrome.storage.local.get('audio_only_bilibili_disabled', (values) => {
+        let disabled = values.audio_only_bilibili_disabled;
 
         if (disabled) {
           this.enableExtension();
@@ -36,7 +39,7 @@ class Background {
         {
           active: true,
           currentWindow: true,
-          url: '*://*.youtube.com/*',
+          url: '*://*.bilibili.com/*',
         },
         (tabs) => {
           if (tabs.length > 0) {
@@ -45,35 +48,32 @@ class Background {
         }
       );
     });
+
+    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+      switch (request.type) {
+        case 'video-change':
+          onVideoChange()
+          break;
+      }
+    });
+    
   }
-
-  removeURLParameters = (url: string, parameters: any[]) => {
-    const urlParts = url.split('?');
-    if (urlParts.length < 2) return;
-
-    let currentParameters = urlParts[1].split(/[&;]/g);
-    const encodedParameters = parameters.map(
-      (para) => `${encodeURIComponent(para)}=`
-    );
-    const filteredParameters = currentParameters.filter(
-      (p) => !encodedParameters.some((enc) => p.startsWith(enc))
-    );
-
-    return `${urlParts[0]}?${filteredParameters.join('&')}`;
-  };
 
   processRequest = (details: any) => {
     const { url, tabId } = details;
-    if (!url.includes('mime=audio')) return;
-
-    if (url.includes('live=1')) {
-      this.tabIds.set(tabId, '');
-      this.sendMessage(tabId);
-      return;
+    // console.log(0, url)
+    if (url.includes('bilivideo.com/upgcxcode')) {
+      count++
+      // console.log(1, url)
+      // 第一个请求是视频，第二个请求是音频，取第二个
+      if (count !== 2) {
+        return
+      }
+    } else {
+      return
     }
-
-    const parametersToBeRemoved = ['range', 'rn', 'rbuf'];
-    const audioURL = this.removeURLParameters(url, parametersToBeRemoved);
+    // console.log(2, url)
+    const audioURL = url;
     if (audioURL && this.tabIds.get(tabId) !== audioURL) {
       this.tabIds.set(tabId, audioURL);
       this.sendMessage(tabId);
@@ -82,6 +82,7 @@ class Background {
 
   sendMessage = (tabId: number) => {
     if (this.tabIds.has(tabId)) {
+      sent = true
       chrome.tabs.sendMessage(tabId, {
         url: this.tabIds.get(tabId),
       });
@@ -91,22 +92,23 @@ class Background {
   enableExtension = () => {
     chrome.browserAction.setIcon({
       path: {
-        19: 'img/icon19.png',
-        38: 'img/icon38.png',
+        // 19: 'img/icon19.png',
+        128: 'img/icon128.png',
       },
     });
     chrome.tabs.onUpdated.addListener(this.sendMessage);
     chrome.webRequest.onBeforeRequest.addListener(
       this.processRequest,
       { urls: ['<all_urls>'] },
+      // ["blocking"]
     );
   };
 
   disableExtension = () => {
     chrome.browserAction.setIcon({
       path: {
-        19: 'img/disabled_icon19.png',
-        38: 'img/disabled_icon38.png',
+        // 19: 'img/disabled_icon19.png',
+        128: 'img/disabled_icon128.png',
       },
     });
     chrome.tabs.onUpdated.removeListener(this.sendMessage);
@@ -115,8 +117,13 @@ class Background {
   };
 
   saveSettings = (disabled: boolean) => {
-    chrome.storage.local.set({ audio_only_youtube_disabled: disabled }); // eslint-disable-line
+    chrome.storage.local.set({ audio_only_bilibili_disabled: disabled }); // eslint-disable-line
   };
+}
+
+function onVideoChange() {
+  count = 0
+  sent = false
 }
 
 const background = new Background();
