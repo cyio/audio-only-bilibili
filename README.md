@@ -5,19 +5,26 @@
 =======================================
 
 好处：
-- 节省带宽
-- 节省视频解码开销
+- 节省带宽（视频部分）
+- 节省视频解码、渲染的系统资源开销
 
 使用：
 - 点击扩展图标切换模式
 
-## Installation
+效果:
 
-- [ ][安装](https://chrome.google.com/webstore/detail/audio-only-bilibili/pkocpiliahoaohbolmkelakpiphnllog)
+![效果](https://pic3.zhimg.com/80/v2-a62fb0dd18360c753d1b03f9a7abee6a_720w.jpg)
 
-## Contribute
+## 安装
 
-1. After cloning the repo,  run `yarn run start`.
+1. 下载：[Releases · cyio/audio-only-bilibili](https://github.com/cyio/audio-only-bilibili/releases)
+2. 打开：`chrome://extensions`，将下载包拖入安装
+
+> 由于上传 Chrome 商店,要求的升级改动(v2 => v3)较大,暂不会支持
+
+## 贡献
+
+1. After cloning the repo,  run `npm run dev`.
 2. Open chrome, go to extensions tab, load unpacked extension and select
    `build/dev` directory.
 3. Go to bilibili and see extension in live.
