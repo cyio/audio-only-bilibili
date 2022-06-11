@@ -1,7 +1,7 @@
 {
   "name": "audio-only-bilibili",
   "displayName": "Audio Only bilibili",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Enables you to disable video streams on bilibili and listen audio",
   "engines": {
     "node": "10.18.0"
@@ -24,7 +24,7 @@
     "@babel/plugin-proposal-function-bind": "^7.2.0",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-typescript": "^7.3.3",
-    "@types/chrome": "^0.0.81",
+    "@types/chrome": "^0.0.190",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "eslint": "^5.15.1",

@@ -1,23 +1,25 @@
 {
   "name": "$DISPLAY_NAME",
   "version": "$VERSION",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "$DESCRIPTION",
   "offline_enabled": true,
   "icons": {
     "128": "img/icon128.png"
   },
   "background": {
-    "scripts": ["js/background.js"]
+    "service_worker": "js/background.js"
   },
   "permissions": [
     "tabs",
     "webRequest",
-    "storage",
+    "storage"
+  ],
+  "host_permissions": [
     "*://www.bilibili.com/*",
     "*://*.bilivideo.com/*"
   ],
-  "browser_action": {
+  "action": {
     "default_title": "Audio Only bilibili"
   },
   "content_scripts": [

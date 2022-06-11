@@ -18,7 +18,7 @@ class Background {
       }
     });
 
-    chrome.browserAction.onClicked.addListener(() => {
+    chrome.action.onClicked.addListener(() => {
       chrome.storage.local.get('audio_only_bilibili_disabled', (values) => {
         let disabled = values.audio_only_bilibili_disabled;
 
@@ -88,10 +88,10 @@ class Background {
   };
 
   enableExtension = () => {
-    chrome.browserAction.setIcon({
+    chrome.action.setIcon({
       path: {
         // 19: 'img/icon19.png',
-        128: 'img/icon128.png',
+        128: '/img/icon128.png',
       },
     });
     chrome.tabs.onUpdated.addListener(this.sendMessage);
@@ -103,11 +103,11 @@ class Background {
   };
 
   disableExtension = () => {
-    chrome.browserAction.setIcon({
-      path: {
-        // 19: 'img/disabled_icon19.png',
-        128: 'img/disabled_icon128.png',
-      },
+    chrome.action.setIcon({
+        path: {
+          // 19: 'img/disabled_icon19.png',
+          128: '/img/disabled_icon128.png'
+        },
     });
     chrome.tabs.onUpdated.removeListener(this.sendMessage);
     chrome.webRequest.onBeforeRequest.removeListener(this.processRequest);
