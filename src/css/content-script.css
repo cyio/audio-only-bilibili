@@ -1,5 +1,4 @@
 .audio_only_div {
-  z-index: 10;
   color: #FFF;
   cursor: pointer;
   position: absolute;
@@ -8,10 +7,11 @@
   top: 20px;
   font-size: 18px;
   /* pointer-events: none; */
-  width: 100%;
+  width: 200px;
   padding: 10px;
   box-sizing: border-box;
-  z-index: 999;
+  z-index: 50;
+  border-bottom: 1px solid gray;
 }
 
 #movie_player:active .audio_only_div {
