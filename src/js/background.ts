@@ -64,18 +64,27 @@ class Background {
     
   }
 
+  getPathname = (url: string) => {
+    if (!url) return ''
+    const u = new URL(url)
+    return u.pathname
+  }
+
   processRequest = (details: any) => {
     const { url, tabId } = details;
-    // console.log(0, url)
-    // path: 30016.m4s 视频，30280.m4s 音频
-    if (!(url.includes('bilivideo.com/upgcxcode') && url.includes('30280.m4s'))) {
-      return
-    }
-    // console.log(2, url)
-    const audioURL = url;
-    if (audioURL && this.tabIds.get(tabId) !== audioURL) {
-      this.tabIds.set(tabId, audioURL);
-      this.sendMessage(tabId);
+    // 音频码率对应 path name
+    // 360p/480p: 30216.m4s.
+    // 720p: 30232.m4s
+    // 1080p: 30280.m4s
+    const isAudioUrl = /.+bilivideo\.com\/upgcxcode.+(30280|30216|30232)\.m4s\?.+/.test(url)
+    if (isAudioUrl) {
+      const audioURL = url;
+      const tabURL = this.tabIds.get(tabId)
+      if (audioURL && this.getPathname(tabURL) !== this.getPathname(audioURL)) {
+        console.log('bg set audio', this.getPathname(tabURL), this.getPathname(url))
+        this.tabIds.set(tabId, audioURL);
+        this.sendMessage(tabId);
+      }
     }
   };
 
@@ -98,7 +107,6 @@ class Background {
     chrome.webRequest.onBeforeRequest.addListener(
       this.processRequest,
       { urls: ['<all_urls>'] },
-      // ["blocking"]
     );
   };
 

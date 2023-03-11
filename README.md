@@ -35,3 +35,10 @@ that you need to reload it in the browser.
 ## 原理
 
 一般主流视频网站都支持视频、音频流分离，扩展获取到音频流地址，设置给`<video>`
+
+技术点：
+- 是否屏蔽视频数据流
+   - 屏蔽，网站会产生不断重试请求，显著消耗资源
+      - 实现需要 api：`declarativeNetRequest`
+   - 不屏蔽，只请求开头一小段视频数据，后续只请求音频数据
+      - 过滤出音频数据：`webRequest.onBeforeRequest`
